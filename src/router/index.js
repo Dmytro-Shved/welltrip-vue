@@ -4,6 +4,8 @@ import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import Register from '@/pages/Register.vue'
 import NotFound from '@/pages/NotFound.vue'
+import Travels from '@/pages/Travels.vue'
+import Tours from '@/pages/Tours.vue'
 
 const routes = [
   {
@@ -11,6 +13,8 @@ const routes = [
     component: DefaultLayout,
     children: [
       {path: '/', name: 'Home', component: Home},
+      {path: '/travels', name: 'Travels', component: Travels},
+      {path: '/tours', name: 'Tours', component: Tours},
     ]
   },
   {
