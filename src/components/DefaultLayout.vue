@@ -1,5 +1,7 @@
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
+import axiosClient from '@/axios.js'
+import router from '@/router/index.js'
 
 const navigation = [
   { name: 'Home', to: { name: 'Home' } },
@@ -9,7 +11,12 @@ const navigation = [
 ]
 
 function logout() {
-  console.log('log out')
+  axiosClient.get('/sanctum/csrf-cookie').then(response => {
+    axiosClient.post('/logout')
+      .then((response) => {
+        router.push({name: 'Login'})
+      })
+  });
 }
 </script>
 
@@ -21,7 +28,11 @@ function logout() {
           <!-- Logo and title -->
           <div class="flex items-center space-x-2">
             <div class="shrink-0">
-              <img class="size-10" src="https://thumbs2.imgbox.com/85/67/o2tm4B7X_t.png" alt="Welltrip" />
+              <img
+                class="size-10"
+                src="https://thumbs2.imgbox.com/85/67/o2tm4B7X_t.png"
+                alt="Welltrip"
+              />
             </div>
             <div>
               <p class="text-sm text-white font-bold">The Journey Begins</p>
@@ -49,10 +60,23 @@ function logout() {
 
               <!-- User Dropdown -->
               <Menu as="div" class="relative ml-3">
-                <MenuButton class="relative flex max-w-xs items-center rounded-sm p-2 bg-white/25 hover:bg-white/20 text-white">
+                <MenuButton
+                  class="relative flex max-w-xs items-center rounded-sm p-2 bg-white/25 hover:bg-white/20 text-white"
+                >
                   <div class="block h-6 w-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                      />
                     </svg>
                   </div>
                 </MenuButton>
@@ -65,11 +89,27 @@ function logout() {
                   leave-from-class="transform scale-100"
                   leave-to-class="transform opacity-0"
                 >
-                  <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5">
+                  <MenuItems
+                    class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5"
+                  >
                     <MenuItem>
-                      <button @click="logout" class="flex items-center px-4 py-2 text-sm text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25" />
+                      <button
+                        @click="logout"
+                        class="flex items-center px-4 py-2 text-sm text-gray-700"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          class="size-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15M12 9l3 3m0 0-3 3m3-3H2.25"
+                          />
                         </svg>
                         Logout
                       </button>
@@ -82,11 +122,24 @@ function logout() {
 
           <!-- Mobile menu button -->
           <div class="-mr-2 flex md:hidden">
-            <DisclosureButton class="relative inline-flex items-center justify-center rounded-sm p-2 bg-white/5 hover:bg-white/4 text-white">
+            <DisclosureButton
+              class="relative inline-flex items-center justify-center rounded-sm p-2 bg-white/5 hover:bg-white/4 text-white"
+            >
               <span class="absolute -inset-0.5"></span>
               <div class="block size-6">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
                 </svg>
               </div>
             </DisclosureButton>
@@ -122,7 +175,10 @@ function logout() {
             </RouterLink>
 
             <!-- Logout -->
-            <button @click="logout(); close()" class="text-gray-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium">
+            <button
+              @click="logout(); close()"
+              class="text-gray-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+            >
               Logout
             </button>
           </div>

@@ -7,10 +7,6 @@ const axiosClient = axios.create({
   withXSRFToken: true,
 })
 
-// axiosClient.interceptors.request.use(config =>{
-//   config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-// })
-
 axiosClient.interceptors.response.use( (response) =>{
   return response;
 }, error => {
