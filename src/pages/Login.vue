@@ -1,13 +1,16 @@
 <script setup>
-import GuestLayout from '@/components/GuestLayout.vue'
+import GuestLayout from '@/components/GuestLayout.vue';
 import axiosClient from "../axios.js";
 import {ref} from "vue";
 import router from "../router";
+import { useAuthStore } from '@/stores/authStore.js';
 
 const data = ref({
   email: '',
   password: '',
 })
+
+const auth = useAuthStore();
 
 const errorMessage = ref('')
 
@@ -15,6 +18,7 @@ function submit() {
   axiosClient.get('/sanctum/csrf-cookie').then(response => {
     axiosClient.post('/login', data.value)
       .then(response => {
+        auth.setUser(response.data.data)
         router.push({name: 'Home'})
       })
       .catch(error => {

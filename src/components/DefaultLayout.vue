@@ -2,6 +2,7 @@
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
 import axiosClient from '@/axios.js'
 import router from '@/router/index.js'
+import { useAuthStore } from '@/stores/authStore.js';
 
 const navigation = [
   { name: 'Home', to: { name: 'Home' } },
@@ -10,10 +11,13 @@ const navigation = [
   { name: 'Register', to: { name: 'Register' } },
 ]
 
+const auth = useAuthStore();
+
 function logout() {
   axiosClient.get('/sanctum/csrf-cookie').then(response => {
     axiosClient.post('/logout')
       .then((response) => {
+        auth.setUser(null)
         router.push({name: 'Login'})
       })
   });
