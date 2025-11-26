@@ -1,8 +1,8 @@
 <script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue'
-import axiosClient from '@/axios.js'
-import router from '@/router/index.js'
-import { useAuthStore } from '@/stores/authStore.js';
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems} from '@headlessui/vue';
+import useAuth from '@/composables/useAuth.js';
+
+const { logout, errorMessage } = useAuth();
 
 const navigation = [
   { name: 'Home', to: { name: 'Home' } },
@@ -10,21 +10,13 @@ const navigation = [
   { name: 'Login', to: { name: 'Login' } },
   { name: 'Register', to: { name: 'Register' } },
 ]
-
-const auth = useAuthStore();
-
-function logout() {
-  axiosClient.get('/sanctum/csrf-cookie').then(response => {
-    axiosClient.post('/logout')
-      .then((response) => {
-        auth.setUser(null)
-        router.push({name: 'Login'})
-      })
-  });
-}
 </script>
 
 <template>
+  <div v-if="errorMessage" class="mt-4 py-2 px-3 rounded text-white bg-red-400">
+    {{errorMessage}}
+  </div>
+
   <div class="min-h-full">
     <Disclosure as="nav" class="bg-gray-800" v-slot="{ close }">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -180,7 +172,7 @@ function logout() {
 
             <!-- Logout -->
             <button
-              @click="logout(); close()"
+              @click="logout; close()"
               class="text-gray-300 hover:text-white block rounded-md px-3 py-2 text-base font-medium"
             >
               Logout

@@ -1,32 +1,14 @@
 <script setup>
 import GuestLayout from '@/components/GuestLayout.vue';
-import axiosClient from "../axios.js";
-import {ref} from "vue";
-import router from "../router";
-import { useAuthStore } from '@/stores/authStore.js';
+import useAuth from '@/composables/useAuth.js';
+import { reactive } from 'vue';
 
-const data = ref({
+const { login, errorMessage } = useAuth()
+
+const form = reactive({
   email: '',
   password: '',
 })
-
-const auth = useAuthStore();
-
-const errorMessage = ref('')
-
-function submit() {
-  axiosClient.get('/sanctum/csrf-cookie').then(response => {
-    axiosClient.post('/login', data.value)
-      .then(response => {
-        auth.setUser(response.data.data)
-        router.push({name: 'Home'})
-      })
-      .catch(error => {
-        console.log(error.response)
-        errorMessage.value = error.response.data.message;
-      })
-  });
-}
 </script>
 
 <template>
@@ -38,13 +20,13 @@ function submit() {
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form @submit.prevent="submit" class="space-y-3">
+      <form @submit.prevent="login(form)" class="space-y-3">
         <!-- Email -->
         <div>
           <label for="email" class="block text-sm/6 font-medium text-gray-900">Email</label>
           <div class="mt-2">
             <input
-              v-model="data.email"
+              v-model="form.email"
               type="email"
               name="email"
               id="email"
@@ -63,7 +45,7 @@ function submit() {
           </div>
           <div class="mt-2">
             <input
-              v-model="data.password"
+              v-model="form.password"
               type="password"
               name="password"
               id="password"
