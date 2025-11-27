@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import router from '@/router/index.js';
-import axiosClient from '@/axios.js';
-import { useAuthStore } from '@/stores/authStore.js';
+import axiosInstance from '@/api/index.js';
+import { useAuthStore } from '@/store/authStore.js'
 
 const errorMessage = ref('')
 
@@ -9,35 +9,35 @@ export default function useAuth() {
   const auth = useAuthStore();
 
   const login = async (credentials) => {
-    await axiosClient.get('http://localhost:8000/sanctum/csrf-cookie');
+    await axiosInstance.get('http://localhost:8000/sanctum/csrf-cookie');
 
     try {
-      await axiosClient.post('/login', credentials).then(response => {
+      await axiosInstance.post('/login', credentials).then(response => {
         // set pinia auth status
-        auth.setAuthenticated(true)
+        auth.setLoggedIn(true)
         // set pinia user data
         auth.setUser(response.data.data)
 
         // redirect to home page
-        router.push({name: 'Home'})
+        router.push({name: 'Dashboard'})
       });
     }catch (e){
-      errorMessage.value = e.response.data.message
+      // errorMessage.value = e.response.data.message
     }
   }
 
   const register = async (credentials) => {
-    await axiosClient.get('http://localhost:8000/sanctum/csrf-cookie');
+    await axiosInstance.get('http://localhost:8000/sanctum/csrf-cookie');
 
     try {
-      await axiosClient.post('/register', credentials).then(response => {
+      await axiosInstance.post('/register', credentials).then(response => {
         // set pinia auth status
-        auth.setAuthenticated(true)
+        auth.setLoggedIn(true)
         // set pinia user data
         auth.setUser(response.data.data)
 
         // redirect to home page
-        router.push({name: 'Home'})
+        router.push({name: 'Dashboard'})
       });
     }catch (e){
       errorMessage.value = e.response.data.message
@@ -46,11 +46,11 @@ export default function useAuth() {
 
   const logout = async () => {
     try {
-      await axiosClient.post('/logout').then(response => {
+      await axiosInstance.post('/logout').then(response => {
         // reset pinia
         auth.reset()
 
-        router.push({name: 'Login'})
+        router.push({name: 'Dashboard'})
       });
     }catch (e){
       errorMessage.value = e.response.data.message
@@ -59,14 +59,14 @@ export default function useAuth() {
 
   const attempt = async () => {
     try {
-      await axiosClient.get('/user').then(response => {
+      await axiosInstance.get('/user').then(response => {
         // set pinia auth status
-        auth.setAuthenticated(true)
+        auth.setLoggedIn(true)
         // set pinia user data
         auth.setUser(response.data.data)
       });
     } catch (e) {
-      auth.setAuthenticated(false)
+      auth.setLoggedIn(false)
       auth.setUser(null)
     }
   }

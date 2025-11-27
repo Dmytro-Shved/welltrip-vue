@@ -1,5 +1,5 @@
 <script setup>
-import GuestLayout from '@/components/GuestLayout.vue';
+import GuestLayout from '@/layouts/GuestLayout.vue';
 import useAuth from '@/composables/useAuth.js';
 import { reactive } from 'vue';
 
