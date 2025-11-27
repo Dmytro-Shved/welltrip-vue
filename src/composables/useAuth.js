@@ -9,14 +9,14 @@ export default function useAuth() {
   const auth = useAuthStore();
 
   const login = async (credentials) => {
-    await axiosClient.get('/sanctum/csrf-cookie');
+    await axiosClient.get('http://localhost:8000/sanctum/csrf-cookie');
 
     try {
       await axiosClient.post('/login', credentials).then(response => {
         // set pinia auth status
         auth.setAuthenticated(true)
         // set pinia user data
-        auth.setUser(response.data)
+        auth.setUser(response.data.data)
 
         // redirect to home page
         router.push({name: 'Home'})
@@ -27,14 +27,14 @@ export default function useAuth() {
   }
 
   const register = async (credentials) => {
-    await axiosClient.get('/sanctum/csrf-cookie');
+    await axiosClient.get('http://localhost:8000/sanctum/csrf-cookie');
 
     try {
       await axiosClient.post('/register', credentials).then(response => {
         // set pinia auth status
         auth.setAuthenticated(true)
         // set pinia user data
-        auth.setUser(response.data)
+        auth.setUser(response.data.data)
 
         // redirect to home page
         router.push({name: 'Home'})
@@ -59,11 +59,11 @@ export default function useAuth() {
 
   const attempt = async () => {
     try {
-      await axiosClient.get('/api/v1/user').then(response => {
+      await axiosClient.get('/user').then(response => {
         // set pinia auth status
         auth.setAuthenticated(true)
         // set pinia user data
-        auth.setUser(response.data)
+        auth.setUser(response.data.data)
       });
     } catch (e) {
       auth.setAuthenticated(false)
