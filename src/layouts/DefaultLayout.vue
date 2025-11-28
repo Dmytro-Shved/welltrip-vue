@@ -10,6 +10,8 @@ const navigation = [
   { name: 'Login', to: { name: 'Login' } },
   { name: 'Register', to: { name: 'Register' } },
 ]
+
+// TODO: understand the good practise how can I hide the UI parts using pinia isLoggedIn
 </script>
 
 <template>
