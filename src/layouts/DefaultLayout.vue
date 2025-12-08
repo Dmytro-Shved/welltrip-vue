@@ -3,6 +3,10 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { logout } from '@/api/auth.js'
 import { useUserStore } from '@/store/user.js'
 import { routerPush } from '@/router/index.js'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+
+const { isAuthorized } = storeToRefs(useUserStore())
 
 const { updateUser } = useUserStore()
 
@@ -15,12 +19,21 @@ async function onLogout() {
   }
 }
 
-const navigation = [
-  { name: 'Dashboard', to: { name: 'Dashboard' } },
-  { name: 'Tours', to: { name: 'Tours' } },
-  { name: 'Login', to: { name: 'Login' } },
-  { name: 'Register', to: { name: 'Register' } },
-]
+const navigation = computed(() => {
+  const items = [
+    { name: 'Dashboard', to: { name: 'Dashboard' } },
+    { name: 'Tours', to: { name: 'Tours' } },
+  ]
+
+  if (!isAuthorized.value) {
+    items.push(
+      { name: 'Login', to: { name: 'Login' } },
+      { name: 'Register', to: { name: 'Register' } }
+    )
+  }
+
+  return items
+})
 </script>
 
 <template>

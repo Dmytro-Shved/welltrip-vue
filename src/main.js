@@ -1,6 +1,3 @@
-// NOTE FOR MYSELF
-// calling plugin setUser without setting the pinia instance as a parameter doesn't work
-
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
