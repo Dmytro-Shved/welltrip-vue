@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, START_LOCATION } from 'vue-router'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import LoginView from '@/views/auth/LoginView.vue'
 import RegisterView from '@/views/auth/RegisterView.vue'
@@ -12,19 +12,13 @@ const routes = [
     name: 'Login',
     path: '/login',
     component: LoginView,
-    beforeEnter: (to, from, next) => {
-      const user = useUserStore()
-      user.isAuthorized ? next('/') : next()
-    },
+    meta: { auth: false },
   },
   {
     name: 'Register',
     path: '/register',
     component: RegisterView,
-    beforeEnter: (to, from, next) => {
-      const user = useUserStore()
-      user.isAuthorized ? next('/') : next()
-    },
+    meta: { auth: false },
   },
   {
     path: '/',
@@ -33,12 +27,14 @@ const routes = [
       {
         name: 'Dashboard',
         path: '/',
-        component: DashboardView
+        component: DashboardView,
+        meta: { auth: false },
       },
       {
         name: 'Tours',
-        path: 'tours',
-        component: ToursView
+        path: '/tours',
+        component: ToursView,
+        meta: { auth: true },
       },
     ]
   },
@@ -46,12 +42,30 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: NotFoundView,
+    meta: { auth: false },
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore();
+
+  if (from === START_LOCATION) {
+    await userStore.getUser();
+  }
+
+  if ((to.name === 'Login' || to.name === 'Register') && userStore.isAuthorized) {
+    return next('/')
+  }
+
+  if (to.meta.auth && !userStore.isAuthorized) {
+    return next('/login')
+  }
+  next()
 })
 
 export async function routerPush(name, params) {
