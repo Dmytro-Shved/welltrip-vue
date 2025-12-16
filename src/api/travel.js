@@ -1,6 +1,7 @@
-import {axiosInstance } from '@/api/index.js'
+import { axiosInstance } from '@/api/index.js'
 
-export async function getTravelsFromApi() {
-  const { data } = await axiosInstance.get('/travels')
-  return data.data
+export async function getTravelsFromApi(page = 1) {
+  return await axiosInstance('/travels', {
+    params: { page }
+  })
 }

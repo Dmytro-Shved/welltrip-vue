@@ -1,42 +1,51 @@
 <script setup>
-import UserGreeting from '@/components/UserGreeting.vue'
 import AppTravelCard from '@/components/AppTravelCard.vue'
 import AppCardContainer from '@/components/AppCardContainer.vue'
-import { getTravelsFromApi } from '@/api/travel.js'
-import { onMounted, ref } from 'vue'
+import AppPagination from '@/components/AppPagination.vue'
+import UserGreeting from '@/components/UserGreeting.vue'
+import { usePagination } from '@/composables/usePagination'
+import { getTravelsFromApi } from '@/api/travel'
 
-const travels = ref([])
-const error = ref([])
-
-const loadTravels = async () => {
-  error.value = null
-
-  try {
-    travels.value = await getTravelsFromApi()
-  } catch (err) {
-    error.value = err.message || "Travels data does't exist"
-  }
-}
-onMounted(loadTravels)
+const {
+  data: travels,
+  meta,
+  links,
+  next,
+  prev,
+  loading
+} = usePagination(getTravelsFromApi)
 </script>
 
 <template>
   <div class="bg-white py-10">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <!-- User greetings -->
+
+      <!-- User greeting-->
       <UserGreeting />
 
-      <!-- Cards -->
+      <!-- Cards Container -->
       <AppCardContainer>
+
+        <!-- Cards -->
         <AppTravelCard
           v-for="travel in travels"
-            :createdAt="travel.created_at"
-            :numberOfDays="travel.number_of_days"
-            :numberOfNights="travel.number_of_nights"
-            :title="travel.name"
-            :description="travel.description"
+          :key="travel.id"
+          :title="travel.name"
+          :description="travel.description"
+          :createdAt="travel.created_at"
+          :numberOfDays="travel.number_of_days"
+          :numberOfNights="travel.number_of_nights"
         />
       </AppCardContainer>
+
+      <!-- Pagination -->
+      <AppPagination
+        :meta="meta"
+        :links="links"
+        :loading="loading"
+        @next="next"
+        @prev="prev"
+      />
     </div>
   </div>
 </template>
