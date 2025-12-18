@@ -33,7 +33,6 @@ async function onRegister(form) {
 <template>
   <GuestLayout>
     <!-- Heading -->
-
     <h2 class="mt-1 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Register</h2>
 
     <div v-if="errorMessage" class="mt-4 py-2 px-3 rounded text-white bg-red-400">
@@ -57,7 +56,7 @@ async function onRegister(form) {
           </div>
 
           <p class="text-sm mt-1 text-red-600">
-            {{ errorMessage.name ? errorMessage.name[0] : '' }}
+            {{ errorMessage?.name ? errorMessage?.name[0] : '' }}
           </p>
         </div>
 
@@ -76,7 +75,7 @@ async function onRegister(form) {
           </div>
 
           <p class="text-sm mt-1 text-red-600">
-            {{ errorMessage.email ? errorMessage.email[0] : '' }}
+            {{ errorMessage?.email ? errorMessage?.email[0] : '' }}
           </p>
         </div>
 
@@ -98,7 +97,7 @@ async function onRegister(form) {
           </div>
 
           <p class="text-sm mt-1 text-red-600">
-            {{ errorMessage.password ? errorMessage.password[0] : '' }}
+            {{ errorMessage?.password ? errorMessage?.password[0] : '' }}
           </p>
         </div>
 
@@ -122,7 +121,7 @@ async function onRegister(form) {
           </div>
 
           <p class="text-sm mt-1 text-red-600">
-            {{ errorMessage.password ? errorMessage.password[0] : '' }}
+            {{ errorMessage?.password ? errorMessage?.password[0] : '' }}
           </p>
         </div>
 

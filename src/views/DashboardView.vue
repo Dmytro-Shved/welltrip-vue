@@ -19,8 +19,6 @@ const {
 <template>
   <div class="bg-white py-10">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-
-
       <!-- User greeting-->
       <UserGreeting />
 
@@ -46,8 +44,6 @@ const {
           :numberOfNights="travel.number_of_nights"
         />
       </AppCardContainer>
-
-
     </div>
   </div>
 </template>
