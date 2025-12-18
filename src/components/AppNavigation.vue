@@ -11,7 +11,7 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import MobileNavLinks from '@/components/MobileNavLinks.vue'
 
-const { isAuthorized } = storeToRefs(useUserStore())
+const { isAuthorized, isAdmin, isEditor } = storeToRefs(useUserStore())
 
 const { updateUser } = useUserStore()
 
@@ -27,11 +27,25 @@ async function onLogout() {
 provide('logout', onLogout)
 
 const navigation = computed(() => {
+  // Public routes
   const items = [
     { name: 'Dashboard', to: { name: 'Dashboard' } },
     { name: 'Tours', to: { name: 'Tours' } },
   ]
 
+  // Admin routes
+  if (isAdmin.value){
+    items.push(
+      { name: 'Create Travel', to: { name: 'New Travel' } }
+    )
+  }
+
+  // Editor routes
+  if (isEditor.value){
+    // items.push()
+  }
+
+  // Auth routes
   if (!isAuthorized.value) {
     items.push(
       { name: 'Login', to: { name: 'Login' } },

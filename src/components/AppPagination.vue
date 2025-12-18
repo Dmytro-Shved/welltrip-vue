@@ -19,8 +19,8 @@ const emit = defineEmits(['next', 'prev'])
     </button>
 
     <!-- Current Page -->
-    <div class="bg-gray-800 text-white p-2 rounded-lg">
-      <span v-if="meta.current_page">
+    <div v-if="meta.current_page" class="bg-gray-800 text-white p-2 rounded-lg">
+      <span>
         Page {{ meta.current_page }} / {{ meta.last_page }}
       </span>
     </div>

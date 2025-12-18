@@ -6,6 +6,7 @@ import NotFoundView from '@/views/NotFoundView.vue'
 import ToursView from '@/views/ToursView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 import { useUserStore } from '@/store/user.js'
+import TravelCreate from '@/views/TravelCreate.vue'
 
 const routes = [
   {
@@ -31,6 +32,15 @@ const routes = [
         meta: { auth: false },
       },
       {
+        name: 'New Travel',
+        path: 'travels/create',
+        component: TravelCreate,
+        meta: {
+          auth: true,
+          roles: ['admin'],
+        },
+      },
+      {
         name: 'Tours',
         path: 'tours',
         component: ToursView,
@@ -54,17 +64,34 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
 
+  // Fetch user in pinia store from start location
   if (from === START_LOCATION) {
     await userStore.getUser();
   }
 
+  // If Authenticated user tries to access Login or Register - go to /
   if ((to.name === 'Login' || to.name === 'Register') && userStore.isAuthorized) {
     return next('/')
   }
 
+  // If route is guarded with auth and user is Unauthorized - go to /login
   if (to.meta.auth && !userStore.isAuthorized) {
     return next('/login')
   }
+
+  // If route is guarded by roles
+  if (to.meta.roles){
+    // If route is guarded with Admin role and user didn't pass - go to /
+    if (to.meta.roles.includes('admin') && !userStore.isAdmin){
+      return next('/')
+    }
+
+    // If route is guarded with Admin role and user didn't pass - go to /
+    if (to.meta.roles.includes('editor') && !userStore.isEditor){
+      return next('/')
+    }
+  }
+
   next()
 })
 
